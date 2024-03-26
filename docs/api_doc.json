@@ -1,0 +1,377 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "短链接服务",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "短链接服务"
+    }
+  ],
+  "paths": {
+    "/{code}": {
+      "get": {
+        "summary": "跳转到长链接",
+        "x-apifox-folder": "短链接服务",
+        "x-apifox-status": "released",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "短链接服务"
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "description": "长度为6字母数字code",
+            "required": true,
+            "example": "EYxhX1",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "记录不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "",
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "description": "错误说明"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "detail"
+                  ],
+                  "required": [
+                    "detail"
+                  ],
+                  "x-apifox-ignore-properties": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/392280/apis/api-157480191-run",
+        "security": []
+      }
+    },
+    "/api/v1/links": {
+      "get": {
+        "summary": "获取链接信息",
+        "x-apifox-folder": "短链接服务",
+        "x-apifox-status": "released",
+        "deprecated": false,
+        "description": "接口有认证要求，请求头需要Authorization",
+        "tags": [
+          "短链接服务"
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "description": "长度为6字母数字code   (code和long_url至少一个不为空)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "long_url",
+            "in": "query",
+            "description": "目标长链接url",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "description": "长度为6字母数字code"
+                    },
+                    "long_url": {
+                      "type": "string",
+                      "description": "目标长链接url"
+                    },
+                    "deadline_unix": {
+                      "type": "integer",
+                      "description": "短链接过期时间戳"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "long_url",
+                    "deadline_unix"
+                  ],
+                  "required": [
+                    "code",
+                    "long_url",
+                    "deadline_unix"
+                  ],
+                  "x-apifox-ignore-properties": []
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求有误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "detail"
+                  ],
+                  "x-apifox-orders": [
+                    "detail"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "入参错误",
+                    "value": {
+                      "detail": "code和long_url参数不能均为空"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "",
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "description": "错误说明"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "detail"
+                  ],
+                  "required": [
+                    "detail"
+                  ],
+                  "x-apifox-ignore-properties": []
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "记录不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "",
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "description": "错误说明"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "detail"
+                  ],
+                  "required": [
+                    "detail"
+                  ],
+                  "x-apifox-ignore-properties": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/392280/apis/api-157482298-run",
+        "security": []
+      },
+      "post": {
+        "summary": "添加链接信息",
+        "x-apifox-folder": "短链接服务",
+        "x-apifox-status": "released",
+        "deprecated": false,
+        "description": "接口有认证要求，请求头需要Authorization",
+        "tags": [
+          "短链接服务"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "long_url": {
+                    "type": "string",
+                    "description": "目标长链接url"
+                  }
+                },
+                "x-apifox-orders": [
+                  "long_url"
+                ],
+                "required": [
+                  "long_url"
+                ],
+                "x-apifox-ignore-properties": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "description": "长度为6字母数字code"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code"
+                  ],
+                  "required": [
+                    "code"
+                  ],
+                  "x-apifox-ignore-properties": []
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求有误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "detail"
+                  ],
+                  "x-apifox-orders": [
+                    "detail"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "入参错误",
+                    "value": {
+                      "detail": "链接请求未能正常响应"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "",
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "description": "错误说明"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "detail"
+                  ],
+                  "required": [
+                    "detail"
+                  ],
+                  "x-apifox-ignore-properties": []
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "已添加此链接",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "",
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "description": "错误说明"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "detail"
+                  ],
+                  "required": [
+                    "detail"
+                  ],
+                  "x-apifox-ignore-properties": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/392280/apis/api-157643094-run",
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "schemas": {},
+    "securitySchemes": {}
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:9898",
+      "description": "短链接服务本地"
+    }
+  ]
+}

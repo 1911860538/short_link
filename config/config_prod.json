@@ -1,0 +1,41 @@
+{
+  "debug": true,
+
+  "server": {
+    "port": 9898,
+    "idle_timeout_seconds": 120,
+    "db_type": "mongodb",
+    "cache_type": "redis"
+  },
+
+  "jwt": {
+    "secret_key": "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7",
+    "algo": "HS256"
+  },
+
+  "core": {
+    "long_url_conn_timeout": 60,
+    "code_len": 6,
+    "code_ttl": 1800,
+    "redirect_status_code": 302,
+    "expired_keep_days": 30,
+    "cache_not_found_value": "0"
+  },
+
+  "mongodb": {
+    "username": "",
+    "password": "",
+    "host": "127.0.0.1",
+    "port": 27017,
+    "db_name": "short_link",
+    "conn_timeout": 10
+  },
+
+  "redis": {
+    "password": "",
+    "host": "127.0.0.1",
+    "port": 6379,
+    "db": 10,
+    "conn_timeout": 10
+  }
+}
