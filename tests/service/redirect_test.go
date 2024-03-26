@@ -11,7 +11,7 @@ import (
 	"github.com/1911860538/short_link/config"
 )
 
-// 测试跳转，code长度和配置长度不一致，直接返回
+// 测试跳转，code字符非法，直接返回
 func TestRedirectInvalidCodeLen(t *testing.T) {
 	db, err := getTestDb()
 	if err != nil {
@@ -31,27 +31,35 @@ func TestRedirectInvalidCodeLen(t *testing.T) {
 		cacheSnapshot[k] = v
 	}
 
-	invalidLenCode := strings.Repeat("a", 10000)
-	redirectRes, err := redirectSvc.Do(context.Background(), invalidLenCode)
-	if err != nil {
-		t.Error(err)
-		return
+	invalidCodes := []string{
+		strings.Repeat("a", 10000), // 长度非法
+		"你好",                       // 长度合法，但是不是数字字母组合
+		"a?X1u2",                   // 长度合法，但是包含非数字字母
+		"-?*#~;",                   // 长度合法，但是包含非数字字母
 	}
 
-	if redirectRes.Redirect {
-		t.Errorf("预期是否跳转为falese，实际返回%t", redirectRes.Redirect)
-		return
-	}
+	for _, invalidCode := range invalidCodes {
+		redirectRes, err := redirectSvc.Do(context.Background(), invalidCode)
+		if err != nil {
+			t.Error(err)
+			return
+		}
 
-	if redirectRes.StatusCode != http.StatusNotFound {
-		t.Errorf("期望返回http状态码404，实际返回%d\n", redirectRes.StatusCode)
-		return
-	}
+		if redirectRes.Redirect {
+			t.Errorf("预期是否跳转为falese，实际返回%t", redirectRes.Redirect)
+			return
+		}
 
-	// 判断code长度非法后，直接返回，没有对缓存进行操作
-	if !maps.Equal(cache.cache, cacheSnapshot) {
-		t.Error("期望不对缓存操作，实际操作了")
-		return
+		if redirectRes.StatusCode != http.StatusNotFound {
+			t.Errorf("期望返回http状态码404，实际返回%d\n", redirectRes.StatusCode)
+			return
+		}
+
+		// 判断code长度非法后，直接返回，没有对缓存进行操作
+		if !maps.Equal(cache.cache, cacheSnapshot) {
+			t.Error("期望不对缓存操作，实际操作了")
+			return
+		}
 	}
 }
 
@@ -208,7 +216,7 @@ func TestRedirectExpired(t *testing.T) {
 		}
 		if isNew {
 			if v.value != config.Conf.Core.CacheNotFoundValue {
-				t.Errorf("缓存写入long_url错误，期望%s，实际%s", redirectRes.LongUrl, v.value)
+				t.Errorf("缓存写入long_url错误，期望%s，实际%s", config.Conf.Core.CacheNotFoundValue, v.value)
 				return
 			}
 		}

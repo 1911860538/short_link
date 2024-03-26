@@ -35,7 +35,8 @@ var (
 )
 
 func (s *RedirectSvc) Do(ctx context.Context, code string) (RedirectRes, error) {
-	if len(code) != confCodeLen {
+	// 去除code非法的无用请求
+	if !s.codeValid(code) {
 		return s.notFound(code)
 	}
 
@@ -80,6 +81,20 @@ func (s *RedirectSvc) Do(ctx context.Context, code string) (RedirectRes, error) 
 	}
 
 	return s.redirect(link.LongUrl)
+}
+
+func (s *RedirectSvc) codeValid(code string) bool {
+	if len(code) != confCodeLen {
+		return false
+	}
+
+	for _, char := range code {
+		if (char < 'a' || char > 'z') && (char < 'A' || char > 'Z') && (char < '0' || char > '9') {
+			return false
+		}
+	}
+
+	return true
 }
 
 func (s *RedirectSvc) getLinkSetCache(ctx context.Context, code string) (*component.Link, error) {

@@ -29,7 +29,7 @@ go_test:
 .PHONY: check_deadcode
 check_deadcode:
 	@echo "run check_deadcode"
-	@go install golang.org/x/tools/cmd/deadcode@latest
+	@#go install golang.org/x/tools/cmd/deadcode@latest
 	@deadcode $(EXCLUDED_TESTS_DIR)
 
 
