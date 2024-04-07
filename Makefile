@@ -26,10 +26,13 @@ go_test:
 	@go test -cover ./...
 
 
+.PHONY: install_deadcode
+install_deadcode:
+	@go install golang.org/x/tools/cmd/deadcode@latest
+
 .PHONY: check_deadcode
-check_deadcode:
+check_deadcode: install_deadcode
 	@echo "run check_deadcode"
-	@#go install golang.org/x/tools/cmd/deadcode@latest
 	@deadcode $(EXCLUDED_TESTS_DIR)
 
 
